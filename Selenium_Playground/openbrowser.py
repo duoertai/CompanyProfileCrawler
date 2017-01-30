@@ -6,7 +6,7 @@ browser = webdriver.Chrome()
 browser.get('http://google.com')
 '''
 
-driver = webdriver.Chrome()
+driver = webdriver.PhantomJS()
 driver.get('http://www.python.org')
 assert 'Python' in driver.title
 element = driver.find_element_by_name('q')
