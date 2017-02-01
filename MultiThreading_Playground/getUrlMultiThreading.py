@@ -2,6 +2,7 @@ import Queue
 import threading
 import urllib2
 import time
+import sys
 
 hosts = ["http://google.com", "http://yahoo.com", "http://apple.com"]
 
@@ -16,7 +17,7 @@ class ThreadUrl(threading.Thread):
         while True:
             host = self.queue.get()
             url = urllib2.urlopen(host)
-            print url.read()
+            print url.read(100)
             self.queue.task_done()
 
 start = time.time()
@@ -32,3 +33,4 @@ for host in hosts:
 queue.join()
 
 print "Elapsed time: %s" % (time.time() - start)
+sys.exit()
