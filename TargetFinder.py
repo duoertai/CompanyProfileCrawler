@@ -9,6 +9,7 @@ import threading
 
 class TargetFinder(threading.Thread):
     def __init__(self, queue):
+        threading.Thread.__init__(self)
         self.driver = webdriver.PhantomJS()
         self.queue = queue
 
