@@ -4,25 +4,35 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 from Queue import Queue
+from pyvirtualdisplay import Display
+from sets import Set
+
 import re
 import threading
 
 class TargetFinder(threading.Thread):
     def __init__(self, queue):
         threading.Thread.__init__(self)
-        self.driver = webdriver.PhantomJS()
+        self.driver = webdriver.Chrome()
         self.queue = queue
+        self.set = Set()
 
     def prepare_starting_page(self):
         # open the finance screener page
         self.driver.get('http://finance.yahoo.com/screener/new')
 
         # click add sector
+        element_present = EC.presence_of_element_located((By.XPATH,
+                                                          "/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-ScreenerDetail-Proxy']/section[@class='Pos(r)']/section[@class='Z(3) Va(t)']/section[@id='screener-criteria']/div[@class='Bd Bdc($grey4) W(100%) Bgc($panelBackground) Pt(14px) Pb(20px) Bdrs(3px) Pos(r) Mt(45px) Bdrststart(0px)!']/div[@class='Mstart(28px) Pend(25px)']/div/div[@class='D(ib) Fl(start)']/div[@class='Mb(5px) C($finDarkGray)'][4]/div[@class='D(ib) Bgc(white) Bdrs(3px)']/div[@class='D(ib) Bgc(white) Bdrs(3px) Pt(12px) Pb(9px) Pstart(18px) Pend(20px) Px(10px)--tab768 Mih(30px) Pos(r)'][1]/div[@class='D(ib) W(560px)--scrm W(510px)--scrl W(428px)!--tab768']/ul[@class='M(0) P(0) D(ib)']/li[@class='D(ib) Mb(3px) filterAdd']/div[@class='M(0) O(n):f D(ib) Bdrs(3px) Bgc($pillBgBlue):h C($finDarkGray) Fz(s)']/div[@class='D(ib) O(n):f Pt(6px) Pb(7px) Pstart(6px) Pend(7px) Bgc($extraLightBlue):f Cur(p)']/span[@class='Va(m) Mstart(6px) Mend(4px)']/span/span"))
+        WebDriverWait(self.driver, 30).until(element_present)
         add_sector_button = self.driver.find_element_by_xpath(
             "/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-ScreenerDetail-Proxy']/section[@class='Pos(r)']/section[@class='Z(3) Va(t)']/section[@id='screener-criteria']/div[@class='Bd Bdc($grey4) W(100%) Bgc($panelBackground) Pt(14px) Pb(20px) Bdrs(3px) Pos(r) Mt(45px) Bdrststart(0px)!']/div[@class='Mstart(28px) Pend(25px)']/div/div[@class='D(ib) Fl(start)']/div[@class='Mb(5px) C($finDarkGray)'][4]/div[@class='D(ib) Bgc(white) Bdrs(3px)']/div[@class='D(ib) Bgc(white) Bdrs(3px) Pt(12px) Pb(9px) Pstart(18px) Pend(20px) Px(10px)--tab768 Mih(30px) Pos(r)'][1]/div[@class='D(ib) W(560px)--scrm W(510px)--scrl W(428px)!--tab768']/ul[@class='M(0) P(0) D(ib)']/li[@class='D(ib) Mb(3px) filterAdd']/div[@class='M(0) O(n):f D(ib) Bdrs(3px) Bgc($pillBgBlue):h C($finDarkGray) Fz(s)']/div[@class='D(ib) O(n):f Pt(6px) Pb(7px) Pstart(6px) Pend(7px) Bgc($extraLightBlue):f Cur(p)']/span[@class='Va(m) Mstart(6px) Mend(4px)']/span/span")
         add_sector_button.click()
 
         # choose technology sector, and close
+        element_present = EC.presence_of_element_located((By.XPATH,
+                                                          "/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-ScreenerDetail-Proxy']/section[@class='Pos(r)']/section[@class='Z(3) Va(t)']/section[@id='screener-criteria']/div[@class='Bd Bdc($grey4) W(100%) Bgc($panelBackground) Pt(14px) Pb(20px) Bdrs(3px) Pos(r) Mt(45px) Bdrststart(0px)!']/div[@class='Mstart(28px) Pend(25px)']/div/div[@class='D(ib) Fl(start)']/div[@class='Mb(5px) C($finDarkGray)'][4]/div[@class='D(ib) Bgc(white) Bdrs(3px)']/div[@class='D(ib) Bgc(white) Bdrs(3px) Pt(12px) Pb(9px) Pstart(18px) Pend(20px) Px(10px)--tab768 Mih(30px) Pos(r)'][1]/div[@class='D(ib) W(560px)--scrm W(510px)--scrl W(428px)!--tab768']/ul[@class='M(0) P(0) D(ib)']/li[@class='D(ib) Mb(3px) filterAdd']/div[@class='M(0) O(n):f D(ib) Bdrs(3px) Bgc($pillBgBlue):h C($finDarkGray) Fz(s)']/div[@class='D(ib) O(n):f Pt(6px) Pb(7px) Pstart(6px) Pend(7px) Bgc($extraLightBlue):f']/div[@id='dropdown-menu']/div[@class='Py(15px)']/div[@class='Pstart(16px) Pend(20px) Mah(230px) Ovy(a)']/ul[@class='M(0) P(0)']/li[@class='Fl(start) D(b) Mb(10px)'][8]/label[@class='Ta(c) Pos(r) Va(tb) Pend(10px)']"))
+        WebDriverWait(self.driver, 30).until(element_present)
         technology_checkbox = self.driver.find_element_by_xpath(
             "/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-ScreenerDetail-Proxy']/section[@class='Pos(r)']/section[@class='Z(3) Va(t)']/section[@id='screener-criteria']/div[@class='Bd Bdc($grey4) W(100%) Bgc($panelBackground) Pt(14px) Pb(20px) Bdrs(3px) Pos(r) Mt(45px) Bdrststart(0px)!']/div[@class='Mstart(28px) Pend(25px)']/div/div[@class='D(ib) Fl(start)']/div[@class='Mb(5px) C($finDarkGray)'][4]/div[@class='D(ib) Bgc(white) Bdrs(3px)']/div[@class='D(ib) Bgc(white) Bdrs(3px) Pt(12px) Pb(9px) Pstart(18px) Pend(20px) Px(10px)--tab768 Mih(30px) Pos(r)'][1]/div[@class='D(ib) W(560px)--scrm W(510px)--scrl W(428px)!--tab768']/ul[@class='M(0) P(0) D(ib)']/li[@class='D(ib) Mb(3px) filterAdd']/div[@class='M(0) O(n):f D(ib) Bdrs(3px) Bgc($pillBgBlue):h C($finDarkGray) Fz(s)']/div[@class='D(ib) O(n):f Pt(6px) Pb(7px) Pstart(6px) Pend(7px) Bgc($extraLightBlue):f']/div[@id='dropdown-menu']/div[@class='Py(15px)']/div[@class='Pstart(16px) Pend(20px) Mah(230px) Ovy(a)']/ul[@class='M(0) P(0)']/li[@class='Fl(start) D(b) Mb(10px)'][8]/label[@class='Ta(c) Pos(r) Va(tb) Pend(10px)']")
         technology_checkbox.click()
@@ -62,4 +72,41 @@ class TargetFinder(threading.Thread):
         find_stock_button.click()
 
     def enqueue_links(self):
-        pass
+        element_present = EC.presence_of_element_located((By.XPATH,
+                                                          "/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-ScreenerDetail-Proxy']/section[@class='Pos(r)']/section[@class='Z(3) Va(t)']/section[@id='screener-results']/div[@class='W(100%) Mt(15px) Ta(end)']/button[@class='Va(m) H(20px) Bd(0) M(0) P(0) Fz(s) Pstart(6px) O(n):f Fw(500) C($actionBlue)']"))
+        WebDriverWait(self.driver, 30).until(element_present)
+        list = []
+        set = Set()
+        next_button = self.driver.find_element_by_xpath(
+            "/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-ScreenerDetail-Proxy']/section[@class='Pos(r)']/section[@class='Z(3) Va(t)']/section[@id='screener-results']/div[@class='W(100%) Mt(15px) Ta(end)']/button[@class='Va(m) H(20px) Bd(0) M(0) P(0) Fz(s) Pstart(6px) O(n):f Fw(500) C($actionBlue)']")
+
+
+        while element_present:
+            soup = BeautifulSoup(self.driver.page_source, "html.parser")
+            res = soup.findAll('a', href=re.compile('/quote/[A-Z]+\?p=[A-Z]+'), recursive=True)
+            for item in res:
+                if item['href'] not in set:
+                    list.append(item['href'])
+
+            next_button = self.driver.find_element_by_xpath(
+                "/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-ScreenerDetail-Proxy']/section[@class='Pos(r)']/section[@class='Z(3) Va(t)']/section[@id='screener-results']/div[@class='W(100%) Mt(15px) Ta(end)']/button[@class='Va(m) H(20px) Bd(0) M(0) P(0) Fz(s) Pstart(6px) O(n):f Fw(500) C($actionBlue)']")
+            next_button.click()
+            try:
+                WebDriverWait(self.driver, 10).until(element_present)
+            except:
+                break
+
+        soup = BeautifulSoup(self.driver.page_source, "html.parser")
+        res = soup.findAll('a', href=re.compile('/quote/[A-Z]+\?p=[A-Z]+'), recursive=True)
+        for item in res:
+            list.append(item['href'])
+
+        for item in list:
+            print item
+
+        print len(list)
+        self.driver.quit()
+
+    def run(self):
+        self.prepare_starting_page()
+        self.enqueue_links()
