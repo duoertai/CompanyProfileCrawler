@@ -10,6 +10,7 @@ from sets import Set
 import re
 import threading
 
+
 class TargetFinder(threading.Thread):
     def __init__(self, queue):
         threading.Thread.__init__(self)
@@ -86,7 +87,7 @@ class TargetFinder(threading.Thread):
             res = soup.findAll('a', href=re.compile('/quote/[A-Z]+\?p=[A-Z]+'), recursive=True)
             for item in res:
                 if item['href'] not in set:
-                    list.append(item['href'])
+                    list.append(item['data-symbol'])
 
             next_button = self.driver.find_element_by_xpath(
                 "/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-ScreenerDetail-Proxy']/section[@class='Pos(r)']/section[@class='Z(3) Va(t)']/section[@id='screener-results']/div[@class='W(100%) Mt(15px) Ta(end)']/button[@class='Va(m) H(20px) Bd(0) M(0) P(0) Fz(s) Pstart(6px) O(n):f Fw(500) C($actionBlue)']")
@@ -99,7 +100,7 @@ class TargetFinder(threading.Thread):
         soup = BeautifulSoup(self.driver.page_source, "html.parser")
         res = soup.findAll('a', href=re.compile('/quote/[A-Z]+\?p=[A-Z]+'), recursive=True)
         for item in res:
-            list.append(item['href'])
+            list.append(item['data-symbol'])
 
         for item in list:
             print item
