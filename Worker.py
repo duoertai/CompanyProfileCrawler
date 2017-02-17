@@ -81,6 +81,37 @@ class Worker(threading.Thread):
             full_time_employee = ""
         print full_time_employee
 
+        # get key executives
+        element_present = EC.presence_of_element_located((By.XPATH, "/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-Quote-Proxy']/section[@class='Pos(r) Z(1)']/div[@class='W(100%) Pos(r)']/section[@class='Va(t) Mend(340px) Mend(0)!--tab768']/div[@class='Pb(30px)']/section[@class='Bxz(bb) quote-subsection']"))
+        try:
+            WebDriverWait(self.driver, 10).until(element_present)
+            table = self.driver.find_element_by_xpath("/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-Quote-Proxy']/section[@class='Pos(r) Z(1)']/div[@class='W(100%) Pos(r)']/section[@class='Va(t) Mend(340px) Mend(0)!--tab768']/div[@class='Pb(30px)']/section[@class='Bxz(bb) quote-subsection']/table[@class='W(100%)']/tbody")
+            rows = table.find_elements(By.TAG_NAME, "tr")
+
+            for row in rows:
+                col = row.find_elements(By.TAG_NAME, "td")[0]
+                print col.text
+                col = row.find_elements(By.TAG_NAME, "td")[1]
+                print col.text
+                col = row.find_elements(By.TAG_NAME, "td")[2]
+                print col.text
+                col = row.find_elements(By.TAG_NAME, "td")[3]
+                print col.text
+                col = row.find_elements(By.TAG_NAME, "td")[4]
+                print col.text
+
+        except:
+            pass
+
+        # get description
+        element_present = EC.presence_of_element_located((By.XPATH, "/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-Quote-Proxy']/section[@class='Pos(r) Z(1)']/div[@class='W(100%) Pos(r)']/section[@class='Va(t) Mend(340px) Mend(0)!--tab768']/div[@class='Pb(30px)']/section[@class='quote-sub-section Mt(30px)']/p[@class='Mt(15px) Lh(1.6)']"))
+        try:
+            WebDriverWait(self.driver, 10).until(element_present)
+            description = self.driver.find_element_by_xpath("/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-Quote-Proxy']/section[@class='Pos(r) Z(1)']/div[@class='W(100%) Pos(r)']/section[@class='Va(t) Mend(340px) Mend(0)!--tab768']/div[@class='Pb(30px)']/section[@class='quote-sub-section Mt(30px)']/p[@class='Mt(15px) Lh(1.6)']")
+            print description.text
+        except:
+            description = ""
+
         self.driver.quit()
 
 
