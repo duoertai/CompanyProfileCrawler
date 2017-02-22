@@ -14,7 +14,7 @@ import threading
 class Worker(threading.Thread):
     def __init__(self, queue):
         threading.Thread.__init__(self)
-        self.driver = webdriver.Chrome()
+        self.driver = webdriver.PhantomJS(service_args=['--ignore-ssl-errors=true'])
         self.queue = queue
 
     def work(self, url):
