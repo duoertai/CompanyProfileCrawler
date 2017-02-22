@@ -115,5 +115,5 @@ class Worker(threading.Thread):
         self.driver.quit()
 
 
-w = Worker('a')
-w.work("http://finance.yahoo.com/quote/IBM/profile?p=IBM")
+#w = Worker('a')
+#w.work("http://finance.yahoo.com/quote/IBM/profile?p=IBM")
