@@ -117,5 +117,4 @@ class TargetFinder(threading.Thread):
     def run(self):
         self.prepare_starting_page()
         self.enqueue_links()
-
-        #self.mark.set()
+        self.mark.set()
