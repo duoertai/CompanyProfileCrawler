@@ -62,6 +62,6 @@ for row in rows:
 
 driver.quit()
 '''
-
-while 1:
-    pass
+stock = "IBM"
+url = "http://finance.yahoo.com/quote/" + stock + "/profile?p=" + stock
+print url

@@ -108,6 +108,9 @@ class TargetFinder(threading.Thread):
             list.append(item['data-symbol'])
             self.queue.put(str(item['data-symbol']))
 
+        # set mark to true to notify worker thread
+        self.mark.set()
+
         for item in list:
             print item
 
@@ -117,4 +120,3 @@ class TargetFinder(threading.Thread):
     def run(self):
         self.prepare_starting_page()
         self.enqueue_links()
-        self.mark.set()

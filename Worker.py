@@ -12,12 +12,15 @@ import threading
 
 
 class Worker(threading.Thread):
-    def __init__(self, queue):
+    def __init__(self, queue, mark):
         threading.Thread.__init__(self)
-        self.driver = webdriver.PhantomJS(service_args=['--ignore-ssl-errors=true'])
+        #self.driver = webdriver.PhantomJS(service_args=['--ignore-ssl-errors=true'])
+        self.driver = webdriver.Chrome()
         self.queue = queue
+        self.mark = mark
 
-    def work(self, url):
+    def work(self, stock):
+        url = "http://finance.yahoo.com/quote/" + stock + "/profile?p=" + stock
         self.driver.get(url)
 
         # get company name
@@ -114,6 +117,11 @@ class Worker(threading.Thread):
 
         self.driver.quit()
 
+    def run(self):
+        while not self.mark.isSet() or not self.queue.empty():
+            stock = self.queue.get()
+            self.work(stock)
+            self.queue.task_done()
 
 #w = Worker('a')
 #w.work("http://finance.yahoo.com/quote/IBM/profile?p=IBM")

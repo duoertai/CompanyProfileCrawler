@@ -11,11 +11,13 @@ if task_done_mark.isSet():
 
 target_finder = TargetFinder(queue, task_done_mark)
 target_finder.start()
-target_finder.join()
 
-while not queue.empty():
-    item = queue.get()
-    queue.task_done()
+worker_list = []
+for i in range(5):
+    worker = Worker(queue, task_done_mark)
+    worker_list.append(worker)
+    worker.start()
+    worker.join()
 
-task_done_mark.wait()
+
 print queue.qsize()
