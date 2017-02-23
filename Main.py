@@ -16,8 +16,8 @@ worker_list = []
 for i in range(5):
     worker = Worker(queue, task_done_mark)
     worker_list.append(worker)
+    worker.setDaemon(True)
     worker.start()
-    worker.join()
 
 
 print queue.qsize()
