@@ -15,13 +15,18 @@ class Worker(threading.Thread):
     def __init__(self, queue, mark):
         threading.Thread.__init__(self)
         #self.driver = webdriver.PhantomJS(service_args=['--ignore-ssl-errors=true'])
-        self.driver = webdriver.Chrome()
+
         self.queue = queue
         self.mark = mark
 
-    def work(self, stock):
-        url = "http://finance.yahoo.com/quote/" + stock + "/profile?p=" + stock
-        self.driver.get(url)
+    def work(self, url):
+        self.driver = webdriver.Chrome()
+        while True:
+            try:
+                self.driver.get(url)
+            except:
+                continue
+            break
 
         # get company name
         element_present = EC.presence_of_element_located((By.XPATH, "/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-Quote-Proxy']/section[@class='Pos(r) Z(1)']/div[@class='W(100%) Pos(r)']/section[@class='Va(t) Mend(340px) Mend(0)!--tab768']/div[@class='Pb(30px)']/div[@class='asset-profile-container']/div[@class='qsp-2col-profile Mt(15px) Lh(1.7)']"))
@@ -120,7 +125,8 @@ class Worker(threading.Thread):
     def run(self):
         while not self.mark.isSet() or not self.queue.empty():
             stock = self.queue.get()
-            self.work(stock)
+            url = "http://finance.yahoo.com/quote/" + stock + "/profile?p=" + stock
+            self.work(url)
             self.queue.task_done()
 
 #w = Worker('a')

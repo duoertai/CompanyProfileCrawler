@@ -19,5 +19,10 @@ for i in range(5):
     worker.setDaemon(True)
     worker.start()
 
+while not task_done_mark.isSet() or not queue.empty():
+    pass
 
 print queue.qsize()
+
+for worker in worker_list:
+    worker.join()
