@@ -34,11 +34,11 @@ class TargetFinder(threading.Thread):
         self.find_stock()
 
     def enqueue_links(self):
-        element_present = EC.presence_of_element_located((By.XPATH, "/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-ScreenerDetail-Proxy']/section[@class='Pos(r)']/section[@class='Z(3) Va(t)']/div[2]/section[@id='screener-results']/div[@class='W(100%) Mt(15px) Ta(end)']/button[@class='Va(m) H(20px) Bd(0) M(0) P(0) Fz(s) Pstart(6px) O(n):f Fw(500) C($actionBlue)']/span[@class='Va(m)']/span"))
+        element_present = EC.presence_of_element_located((By.XPATH, "/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-ScreenerDetail-Proxy']/section[@class='Pos(r)']/section[@class='Z(3) Va(t)']/div[2]/section[@id='screener-results']/div[@class='Pos(r)']/div/div[@class='W(100%) Mt(15px) Ta(end)']/button[@class='Va(m) H(20px) Bd(0) M(0) P(0) Fz(s) Pstart(6px) O(n):f Fw(500) C($actionBlue)']/span[@class='Va(m)']/span"))
         WebDriverWait(self.driver, 30).until(element_present)
         list = []
         set = Set()
-        next_button = self.driver.find_element_by_xpath("/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-ScreenerDetail-Proxy']/section[@class='Pos(r)']/section[@class='Z(3) Va(t)']/div[2]/section[@id='screener-results']/div[@class='W(100%) Mt(15px) Ta(end)']/button[@class='Va(m) H(20px) Bd(0) M(0) P(0) Fz(s) Pstart(6px) O(n):f Fw(500) C($actionBlue)']/span[@class='Va(m)']/span")
+        next_button = self.driver.find_element_by_xpath("/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-ScreenerDetail-Proxy']/section[@class='Pos(r)']/section[@class='Z(3) Va(t)']/div[2]/section[@id='screener-results']/div[@class='Pos(r)']/div/div[@class='W(100%) Mt(15px) Ta(end)']/button[@class='Va(m) H(20px) Bd(0) M(0) P(0) Fz(s) Pstart(6px) O(n):f Fw(500) C($actionBlue)']/span[@class='Va(m)']/span")
         WebDriverWait(self.driver, 10).until(element_present)
 
         while element_present:
@@ -50,7 +50,7 @@ class TargetFinder(threading.Thread):
                     self.queue.put(str(item['data-symbol']))
 
             next_button = self.driver.find_element_by_xpath(
-                "/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-ScreenerDetail-Proxy']/section[@class='Pos(r)']/section[@class='Z(3) Va(t)']/div[2]/section[@id='screener-results']/div[@class='W(100%) Mt(15px) Ta(end)']/button[@class='Va(m) H(20px) Bd(0) M(0) P(0) Fz(s) Pstart(6px) O(n):f Fw(500) C($actionBlue)']/span[@class='Va(m)']/span")
+                "/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-ScreenerDetail-Proxy']/section[@class='Pos(r)']/section[@class='Z(3) Va(t)']/div[2]/section[@id='screener-results']/div[@class='Pos(r)']/div/div[@class='W(100%) Mt(15px) Ta(end)']/button[@class='Va(m) H(20px) Bd(0) M(0) P(0) Fz(s) Pstart(6px) O(n):f Fw(500) C($actionBlue)']/span[@class='Va(m)']/span")
             next_button.click()
             try:
                 WebDriverWait(self.driver, 10).until(element_present)
@@ -112,9 +112,12 @@ class TargetFinder(threading.Thread):
         find_stock_button = self.driver.find_element_by_xpath("/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-ScreenerDetail-Proxy']/section[@class='Pos(r)']/section[@class='Z(3) Va(t)']/section[@id='screener-criteria']/div[@class='Bd Bdc($grey4) W(100%) Bgc($panelBackground) Pt(14px) Pb(20px) Bdrs(3px) Pos(r) Mt(45px) Bdrststart(0px)!']/div[@class='Mstart(28px) Pend(25px)']/div/div[@class='D(ib) Fl(start)']/div[@class='Mt(20px)']/button[@class='Bgc($actionBlue) C(white) Fw(500) Px(20px) Py(9px) Bdrs(3px) Bd(0) Fz(s) D(ib) Whs(nw) Miw(110px) Bgc($actionBlueHover):h']/span")
         find_stock_button.click()
 
-        element_present = EC.presence_of_element_located((By.XPATH, "/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-ScreenerDetail-Proxy']/section[@class='Pos(r)']/section[@class='Z(3) Va(t)']/div[2]/section[@id='screener-results']/div[@class='Pos(r)']/div[@class='Pos(a) Start(0) T(0) End(0) B(0) Z(6)']/div[@class='Mstart(a) Mend(a) W(560px) H(220px) Bgc(white) Bxsh($boxShadow) Bd Bdc($lightGray) Bdrs(3px) Mt(80px)']"))
-        WebDriverWait(self.driver, 30).until(element_present)
-        find_stock_button.click()
+        element_present = EC.presence_of_element_located((By.XPATH, "/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-ScreenerDetail-Proxy']/section[@class='Pos(r)']/section[@class='Z(3) Va(t)']/div[2]/section[@id='screener-results']/div[@class='Pos(r)']/div[@class='Pos(a) Start(0) T(0) End(0) B(0) Z(6)']/div[@class='Mstart(a) Mend(a) W(560px) H(220px) Bgc(white) Bxsh($boxShadow) Bd Bdc($finLightGray) Bdrs(3px) Mt(80px)']/div[@class='Mstart(a) Mend(a) Pt(65px) Ta(c)']"))
+        try:
+            WebDriverWait(self.driver, 30).until(element_present)
+            find_stock_button.click()
+        except:
+            pass
 
     def run(self):
         self.prepare_starting_page()

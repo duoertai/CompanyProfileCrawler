@@ -9,7 +9,7 @@ from sets import Set
 import string
 import re
 import threading
-
+from pymongo import *
 
 class Worker(threading.Thread):
     def __init__(self, queue, mark):
@@ -18,8 +18,12 @@ class Worker(threading.Thread):
         self.driver = webdriver.Chrome()
         self.queue = queue
         self.mark = mark
+        self.db_client = MongoClient()
+        self.db = self.db_client.get_database('company')
+        self.collection = self.db.get_collection('company_profile')
 
     def work(self, url):
+        self.company_profile = {}
 
         while True:
             try:
@@ -49,6 +53,8 @@ class Worker(threading.Thread):
         # get description
         self.get_description()
 
+        print self.company_profile
+        self.collection.insert(self.company_profile)
 
 
     def get_company_name(self):
@@ -59,7 +65,7 @@ class Worker(threading.Thread):
             company_name = str(company_name.text)
         except:
             company_name = ""
-        print company_name
+        self.company_profile["Company Name"] = company_name
 
     def get_address_telephone_website(self):
         element_present = EC.presence_of_element_located((By.XPATH,
@@ -79,9 +85,9 @@ class Worker(threading.Thread):
             telephone = ""
             website_url = ""
 
-        print address
-        print telephone
-        print website_url
+        self.company_profile['Address'] = address
+        self.company_profile['Telephone'] = telephone
+        self.company_profile['Website Url'] = website_url
 
     def get_sector(self):
         element_present = EC.presence_of_element_located((By.XPATH,
@@ -93,7 +99,7 @@ class Worker(threading.Thread):
             sector = str(sector.text)
         except:
             sector = ""
-        print sector
+        self.company_profile['Sector'] = sector
 
     def get_industry(self):
         element_present = EC.presence_of_element_located((By.XPATH, "/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-Quote-Proxy']/section[@class='Pos(r) Z(1)']/div[@class='W(100%) Pos(r)']/section[@class='Va(t) Mend(340px) Mend(0)!--tab768']/div[@class='Pb(30px)']/div[@class='asset-profile-container']/div[@class='qsp-2col-profile Mt(15px) Lh(1.7)']/div[@class='Mb(35px)']/p[@class='D(ib) Va(t)']/strong[2]"))
@@ -103,7 +109,7 @@ class Worker(threading.Thread):
             industry = str(industry.text)
         except:
             industry = ""
-        print industry
+        self.company_profile['Industry'] = industry
 
     def get_full_time_employee_count(self):
         element_present = EC.presence_of_element_located((By.XPATH, "/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-Quote-Proxy']/section[@class='Pos(r) Z(1)']/div[@class='W(100%) Pos(r)']/section[@class='Va(t) Mend(340px) Mend(0)!--tab768']/div[@class='Pb(30px)']/div[@class='asset-profile-container']/div[@class='qsp-2col-profile Mt(15px) Lh(1.7)']/div[@class='Mb(35px)']/p[@class='D(ib) Va(t)']/strong[3]/span"))
@@ -113,9 +119,10 @@ class Worker(threading.Thread):
             full_time_employee = str(full_time_employee.text)
         except:
             full_time_employee = ""
-        print full_time_employee
+        self.company_profile['Full-time Employee'] = full_time_employee
 
     def get_key_executives(self):
+        key_executives = []
         element_present = EC.presence_of_element_located((By.XPATH, "/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-Quote-Proxy']/section[@class='Pos(r) Z(1)']/div[@class='W(100%) Pos(r)']/section[@class='Va(t) Mend(340px) Mend(0)!--tab768']/div[@class='Pb(30px)']/section[@class='Bxz(bb) quote-subsection']"))
         try:
             WebDriverWait(self.driver, 10).until(element_present)
@@ -123,28 +130,33 @@ class Worker(threading.Thread):
             rows = table.find_elements(By.TAG_NAME, "tr")
 
             for row in rows:
+                executive = {}
                 col = row.find_elements(By.TAG_NAME, "td")[0]
-                print col.text
+                executive['Name'] = str(col.text)
                 col = row.find_elements(By.TAG_NAME, "td")[1]
-                print col.text
+                executive['Title'] = str(col.text)
                 col = row.find_elements(By.TAG_NAME, "td")[2]
-                print col.text
+                executive['Pay'] = str(col.text)
                 col = row.find_elements(By.TAG_NAME, "td")[3]
-                print col.text
+                executive['Exercised'] = str(col.text)
                 col = row.find_elements(By.TAG_NAME, "td")[4]
-                print col.text
+                executive['Age'] = str(col.text)
+                key_executives.append(executive)
 
         except:
             pass
+
+        self.company_profile['Key Executives'] = key_executives
 
     def get_description(self):
         element_present = EC.presence_of_element_located((By.XPATH, "/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-Quote-Proxy']/section[@class='Pos(r) Z(1)']/div[@class='W(100%) Pos(r)']/section[@class='Va(t) Mend(340px) Mend(0)!--tab768']/div[@class='Pb(30px)']/section[@class='quote-sub-section Mt(30px)']/p[@class='Mt(15px) Lh(1.6)']"))
         try:
             WebDriverWait(self.driver, 10).until(element_present)
             description = self.driver.find_element_by_xpath("/html[@id='atomic']/body/div[@id='app']/div/div/div[@id='render-target-default']/main[@class='app']/div[@id='FIN-MainCanvas']/div[@class='Bxz(bb) H(100%) Pos(r) Maw($newGridWidth) Miw($minGridWidth) Miw(ini)!--tab768 Miw(ini)!--tab1024 Mstart(a) Mend(a) Px(20px) Z(3)']/div/div[@id='main-0-Quote-Proxy']/section[@class='Pos(r) Z(1)']/div[@class='W(100%) Pos(r)']/section[@class='Va(t) Mend(340px) Mend(0)!--tab768']/div[@class='Pb(30px)']/section[@class='quote-sub-section Mt(30px)']/p[@class='Mt(15px) Lh(1.6)']")
-            print description.text
         except:
             description = ""
+
+        self.company_profile['Description'] = str(description)
 
     def run(self):
         while not self.mark.isSet() or not self.queue.empty():
@@ -153,7 +165,5 @@ class Worker(threading.Thread):
             self.work(url)
             self.queue.task_done()
 
+        self.db_client.close()
         self.driver.quit()
-
-#w = Worker('a')
-#w.work("http://finance.yahoo.com/quote/IBM/profile?p=IBM")
